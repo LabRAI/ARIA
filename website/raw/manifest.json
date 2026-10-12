@@ -1,0 +1,47 @@
+{
+  "schema_version": "aria-multi-agent-exhibit-manifest-v1",
+  "cases": [
+    {
+      "benchmark": "humaneval",
+      "case_id": "humaneval-121",
+      "label": "HumanEval",
+      "mas": "metagpt",
+      "source_sha256": "96a8f44e7b6d4b37bf333e61e00fda82e491633bbfb096cdb624b026acc3fd95"
+    },
+    {
+      "benchmark": "mmlu",
+      "case_id": "mmlu-test-02104",
+      "label": "MMLU",
+      "mas": "metagpt",
+      "source_sha256": "95eaf43942c7537904f98a47875c6b67b4ec62144b880287cc8e536ab1e7a919"
+    },
+    {
+      "benchmark": "gsm-plus",
+      "case_id": "gsm-plus-test-00098",
+      "label": "GSM-Plus",
+      "mas": "metagpt",
+      "source_sha256": "dc19a693e89cea0806cd6a8ee2bfd94c7508f4f19433a00342c29f56b8eab000"
+    },
+    {
+      "benchmark": "gaia",
+      "case_id": "4d51c4bf-4b0e-4f3d-897b-3f6687a7d9f2",
+      "label": "GAIA",
+      "mas": "ag2",
+      "source_sha256": "499e4502939e7e7a7d5dbb2c06816c759757efb3e9401822d8faac0aaed4cafe"
+    },
+    {
+      "benchmark": "olympiadbench",
+      "case_id": "olympiadbench-en-test-02028",
+      "label": "OlympiadBench",
+      "mas": "ag2",
+      "source_sha256": "95e7c704ba17bbc33f16b6593084007f9bf640c35b355c469429d6503868e3d5"
+    },
+    {
+      "benchmark": "swe-bench-lite",
+      "case_id": "django-django-15400",
+      "label": "SWE-Bench Lite",
+      "mas": "metagpt",
+      "source_sha256": "e539084d1fa65512dc3be7a7b26889182eaac59310c6878351a95f02b3cb36a6"
+    }
+  ]
+}
