@@ -1,0 +1,55 @@
+output_root: outputs/evaluation/rq2
+training_root: outputs/training/rq2
+workers: 20
+workers_per_predictor: 5
+max_infrastructure_attempts: 2
+report_seconds: 60
+poll_seconds: 5
+minimum_disk_free_gib: 30
+process_timeout_seconds: 2100
+serving_environment: .venv-vllm
+project_environments:
+  ag2: .venv-ag2
+  langgraph: .venv-langgraph
+gate_threshold: 0.6
+execution_seed: 42
+training_seed: 42
+bootstrap_replicates: 2000
+bootstrap_seed: 42
+services:
+  host:
+    model: Qwen/Qwen3-8B
+    port: 18920
+    gpu: 2
+    memory_gib: 22
+    context: 32768
+  qwen25-1.5b:
+    model: Qwen/Qwen2.5-1.5B-Instruct
+    port: 18921
+    gpu: 2
+    memory_gib: 5
+    context: 8192
+  qwen25-3b:
+    model: Qwen/Qwen2.5-3B-Instruct
+    port: 18922
+    gpu: 2
+    memory_gib: 9
+    context: 8192
+  qwen25-7b:
+    model: Qwen/Qwen2.5-7B-Instruct
+    port: 18923
+    gpu: 0
+    memory_gib: 21
+    context: 8192
+  llama31-8b:
+    model: meta-llama/Llama-3.1-8B-Instruct
+    port: 18924
+    gpu: 0
+    memory_gib: 23
+    context: 8192
+  qwen25-14b:
+    model: Qwen/Qwen2.5-14B-Instruct
+    port: 18925
+    gpu: 0
+    memory_gib: 38
+    context: 8192

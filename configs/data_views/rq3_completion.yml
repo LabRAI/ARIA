@@ -1,0 +1,30 @@
+output_root: outputs/evaluation/rq3_completion
+rq1_root: outputs/evaluation/rq1
+rq3_source_root: outputs/evaluation/rq3
+rq2_root: outputs/evaluation/rq2
+rq2_training_root: outputs/training/rq2
+recovery_root: outputs/training/recovery
+qwen_seeds:
+- 42
+llama_seeds:
+- 42
+native_workers: 12
+native_workers_per_service: 12
+swe_workers: 1
+minimum_disk_free_gib: 35
+poll_seconds: 5
+report_seconds: 120
+adapter_load_timeout_seconds: 300
+bootstrap_draws: 1000
+bootstrap_seed: 20260918
+training_lanes: []
+allow_full_view_retry: false
+rq2_service_overrides:
+  host:
+    gpu: 1
+    memory_gib: 22
+  qwen25-14b:
+    gpu: 1
+    memory_gib: 38
+evaluation_only: true
+training_enabled: false

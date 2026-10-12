@@ -1,0 +1,59 @@
+job: repair
+runtime:
+  kind: endpoint
+data_dir: data
+external_dir: external
+output_dir: outputs
+workspace_dir: workspace/manual_api_repair/ag2/olympiadbench/endpoint-c-claude-sonnet-4-6
+output:
+  existing_output_policy: resume
+aria:
+  enabled: false
+  mode: 'off'
+api:
+  runtime_id: runtime/endpoint-c-claude-sonnet-4-6
+  model_id: model/claude-sonnet-4-6
+  provider: claude-gateway
+  protocol: anthropic-messages
+  base_url: https://api.example.invalid
+  model: claude-sonnet-4-6
+  api_key_env: ANTHROPIC_API_KEY
+  max_tokens: 8192
+  temperature: 0.0
+  api_key_required: true
+  timeout_seconds: 600
+  retries: 4
+  retry_seconds: 10
+logging:
+  level: INFO
+prepare:
+  clone_mas: false
+  download_benchmarks: false
+  gaia_attachments: false
+experiments: []
+repair_datasets:
+- name: repair-v4-selected-ag2-olympiadbench-endpoint-b-claude-sonnet-4-6
+  schema_version: aria-repair-dataset-v6
+  source_batch_dir: outputs/inference/ag2/olympiadbench/selected-ag2-olympiadbench-endpoint-b-claude-sonnet-4-6
+  dataset_dir: outputs/repair/ag2/olympiadbench/repair-v4-selected-ag2-olympiadbench-endpoint-b-claude-sonnet-4-6/dataset
+  repair_output_dir: outputs/repair/ag2/olympiadbench/repair-v4-selected-ag2-olympiadbench-endpoint-b-claude-sonnet-4-6/reruns
+  split: train
+  sample_split: test
+  rerun: true
+  native: true
+  resume: true
+  on_sample_error: continue
+  retry_invalid: true
+  max_consecutive_endpoint_invalid: 3
+  capacity_wait_seconds: 300
+  capacity_wait_max_attempts: 0
+  repair_trials: 1
+  structured_output_retries: 8
+  attribution_max_events: 64
+  gate_success_sample_rate: 0.25
+  require_inference_completed: false
+  require_trace_acceptance: true
+  repair_operator_id: model/aria-repair-v4-localize-attribute-patch-answer-blind
+  config_id: config/repair-v4-selected-ag2-olympiadbench-endpoint-b-claude-sonnet-4-6
+  max_turns: 4
+  native_timeout_seconds: 3000

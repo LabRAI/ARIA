@@ -1,0 +1,60 @@
+job: repair
+runtime:
+  kind: endpoint
+data_dir: data
+external_dir: external
+output_dir: outputs
+workspace_dir: workspace/manual_api_repair/magentic-one/gaia/endpoint-a-gpt-5-5-xhigh
+output:
+  existing_output_policy: resume
+aria:
+  enabled: false
+  mode: 'off'
+api:
+  runtime_id: runtime/endpoint-a-gpt-5-5-xhigh
+  model_id: model/gpt-5-5
+  provider: openai-compatible
+  protocol: openai-chat-completions
+  base_url: https://api.example.invalid
+  model: gpt-5.5
+  api_key_env: OPENAI_API_KEY
+  max_tokens: 8192
+  reasoning_effort: xhigh
+  api_key_required: true
+  timeout_seconds: 600
+  retries: 4
+  retry_seconds: 10
+logging:
+  level: INFO
+prepare:
+  clone_mas: false
+  download_benchmarks: false
+  gaia_attachments: true
+experiments: []
+repair_datasets:
+- name: repair-v4-selected-magentic-one-gaia-endpoint-a-gpt-5-5-xhigh
+  schema_version: aria-repair-dataset-v6
+  source_batch_dir: outputs/inference/magentic-one/gaia/selected-magentic-one-gaia-endpoint-a-gpt-5-5-xhigh
+  dataset_dir: outputs/repair/magentic-one/gaia/repair-v4-selected-magentic-one-gaia-endpoint-a-gpt-5-5-xhigh/dataset
+  repair_output_dir: outputs/repair/magentic-one/gaia/repair-v4-selected-magentic-one-gaia-endpoint-a-gpt-5-5-xhigh/reruns
+  split: train
+  sample_split: validation
+  rerun: true
+  native: true
+  resume: true
+  on_sample_error: continue
+  retry_invalid: false
+  max_consecutive_endpoint_invalid: 3
+  repair_trials: 1
+  structured_output_retries: 2
+  attribution_max_events: 64
+  gate_success_sample_rate: 0.25
+  require_inference_completed: false
+  require_trace_acceptance: true
+  repair_operator_id: model/aria-repair-v4-localize-attribute-patch-answer-blind
+  config_id: config/repair-v4-selected-magentic-one-gaia-endpoint-a-gpt-5-5-xhigh
+  max_turns: 12
+  max_stalls: 3
+  native_timeout_seconds: 3000
+  evaluation:
+    harness: gaia-official

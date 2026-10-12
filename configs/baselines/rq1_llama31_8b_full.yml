@@ -1,0 +1,415 @@
+job: baselines
+runtime:
+  kind: vllm
+vllm:
+  host: 127.0.0.1
+  port: 18210
+  hf_model_name: meta-llama/Llama-3.1-8B-Instruct
+  served_model_name: meta-llama/Llama-3.1-8B-Instruct
+  dtype: bfloat16
+  max_model_len: 16384
+  gpu_memory_utilization: 0.45
+  extra_args:
+  - --enable-auto-tool-choice
+  - --tool-call-parser
+  - llama3_json
+  - --enforce-eager
+  - --max-num-seqs
+  - '8'
+  - --chat-template
+  - scripts/slurm/tool_chat_template_llama3.1_json.jinja
+  cuda_visible_devices: '0'
+data_dir: data
+external_dir: external
+output_dir: outputs
+workspace_dir: workspace
+baseline_workers: 8
+api:
+  provider: vllm
+  protocol: openai-chat-completions
+  base_url: http://127.0.0.1:18210/v1
+  model: meta-llama/Llama-3.1-8B-Instruct
+  api_key_required: false
+  timeout_seconds: 600
+  max_tokens: 4096
+  temperature: 0.2
+  seed: 42
+  retries: 2
+  context_window_tokens: 16384
+logging:
+  level: INFO
+prepare:
+  clone_mas: false
+  download_benchmarks: false
+baselines:
+- name: rq1-posthoc-zero_shot-llama31-8b-full
+  method: zero_shot
+  input_path: ../../data/evaluation/rq1_complete_test.jsonl
+  input_format: aria-full
+  split: test
+  max_events: 100000
+  prompt_char_budget: 24000
+  output_dir: ../../outputs/baselines/llama31_8b/zero_shot
+  resume: true
+  on_sample_error: continue
+  sample_workers: 2
+  replay_backend:
+    type: native
+    options:
+      host_api: &id001
+        provider: vllm
+        protocol: openai-chat-completions
+        base_url: http://127.0.0.1:19010/v1
+        model: Qwen/Qwen3-8B
+        api_key_required: false
+        timeout_seconds: 600
+        max_tokens: 2048
+        temperature: 0.2
+        seed: 42
+        retries: 1
+        context_window_tokens: 32768
+      paired_control: true
+      control_output_root: outputs/baselines/shared-controls/rq1_llama31_8b_full
+      continuation_char_budget: 12000
+      timeout_seconds: 7500
+      swebench_cache_dir: outputs/baselines/repository-cache
+      project_environments:
+        openmanus: .venv-openmanus
+        metagpt: .venv-metagpt
+        ag2: .venv-ag2
+        magentic-one: .venv-magentic-one
+      native_options:
+        max_steps: 20
+        max_turns: 6
+        max_stalls: 3
+        native_timeout_seconds: 1800
+        context_window_tokens: 32768
+        model_vision: false
+        code_execution_environment: per-sample
+        context_budget_mode: server-tokenizer
+        swebench_workspace_mode: isolated-clone
+      evaluation:
+        timeout_seconds: 1800
+        process_timeout_seconds: 5400
+        max_workers: 1
+        cache_level: env
+        clean: false
+        namespace: swebench
+        docker_platform: linux/amd64
+        use_host_docker_credentials: false
+  model_identity: llama31-8b
+- name: rq1-posthoc-who_when-llama31-8b-full
+  method: who_when
+  input_path: ../../data/evaluation/rq1_complete_test.jsonl
+  input_format: aria-full
+  split: test
+  max_events: 100000
+  prompt_char_budget: 24000
+  output_dir: ../../outputs/baselines/llama31_8b/who_when
+  resume: true
+  on_sample_error: continue
+  sample_workers: 2
+  replay_backend:
+    type: native
+    options:
+      host_api: *id001
+      paired_control: true
+      control_output_root: outputs/baselines/shared-controls/rq1_llama31_8b_full
+      continuation_char_budget: 12000
+      timeout_seconds: 7500
+      swebench_cache_dir: outputs/baselines/repository-cache
+      project_environments:
+        openmanus: .venv-openmanus
+        metagpt: .venv-metagpt
+        ag2: .venv-ag2
+        magentic-one: .venv-magentic-one
+      native_options:
+        max_steps: 20
+        max_turns: 6
+        max_stalls: 3
+        native_timeout_seconds: 1800
+        context_window_tokens: 32768
+        model_vision: false
+        code_execution_environment: per-sample
+        context_budget_mode: server-tokenizer
+        swebench_workspace_mode: isolated-clone
+      evaluation:
+        timeout_seconds: 1800
+        process_timeout_seconds: 5400
+        max_workers: 1
+        cache_level: env
+        clean: false
+        namespace: swebench
+        docker_platform: linux/amd64
+        use_host_docker_credentials: false
+  model_identity: llama31-8b
+- name: rq1-posthoc-agentrx-llama31-8b-full
+  method: agentrx
+  input_path: ../../data/evaluation/rq1_complete_test.jsonl
+  input_format: aria-full
+  split: test
+  max_events: 100000
+  prompt_char_budget: 24000
+  output_dir: ../../outputs/baselines/llama31_8b/agentrx
+  resume: true
+  on_sample_error: continue
+  sample_workers: 2
+  replay_backend:
+    type: native
+    options:
+      host_api: *id001
+      paired_control: true
+      control_output_root: outputs/baselines/shared-controls/rq1_llama31_8b_full
+      continuation_char_budget: 12000
+      timeout_seconds: 7500
+      swebench_cache_dir: outputs/baselines/repository-cache
+      project_environments:
+        openmanus: .venv-openmanus
+        metagpt: .venv-metagpt
+        ag2: .venv-ag2
+        magentic-one: .venv-magentic-one
+      native_options:
+        max_steps: 20
+        max_turns: 6
+        max_stalls: 3
+        native_timeout_seconds: 1800
+        context_window_tokens: 32768
+        model_vision: false
+        code_execution_environment: per-sample
+        context_budget_mode: server-tokenizer
+        swebench_workspace_mode: isolated-clone
+      evaluation:
+        timeout_seconds: 1800
+        process_timeout_seconds: 5400
+        max_workers: 1
+        cache_level: env
+        clean: false
+        namespace: swebench
+        docker_platform: linux/amd64
+        use_host_docker_credentials: false
+  model_identity: llama31-8b
+- name: rq1-posthoc-errorprobe-llama31-8b-full
+  method: errorprobe
+  input_path: ../../data/evaluation/rq1_complete_test.jsonl
+  input_format: aria-full
+  split: test
+  max_events: 100000
+  prompt_char_budget: 24000
+  output_dir: ../../outputs/baselines/llama31_8b/errorprobe
+  resume: true
+  on_sample_error: continue
+  sample_workers: 2
+  replay_backend:
+    type: native
+    options:
+      host_api: *id001
+      paired_control: true
+      control_output_root: outputs/baselines/shared-controls/rq1_llama31_8b_full
+      continuation_char_budget: 12000
+      timeout_seconds: 7500
+      swebench_cache_dir: outputs/baselines/repository-cache
+      project_environments:
+        openmanus: .venv-openmanus
+        metagpt: .venv-metagpt
+        ag2: .venv-ag2
+        magentic-one: .venv-magentic-one
+      native_options:
+        max_steps: 20
+        max_turns: 6
+        max_stalls: 3
+        native_timeout_seconds: 1800
+        context_window_tokens: 32768
+        model_vision: false
+        code_execution_environment: per-sample
+        context_budget_mode: server-tokenizer
+        swebench_workspace_mode: isolated-clone
+      evaluation:
+        timeout_seconds: 1800
+        process_timeout_seconds: 5400
+        max_workers: 1
+        cache_level: env
+        clean: false
+        namespace: swebench
+        docker_platform: linux/amd64
+        use_host_docker_credentials: false
+  model_identity: llama31-8b
+- name: rq1-posthoc-dover-llama31-8b-full
+  method: dover
+  input_path: ../../data/evaluation/rq1_complete_test.jsonl
+  input_format: aria-full
+  split: test
+  max_events: 100000
+  prompt_char_budget: 24000
+  output_dir: ../../outputs/baselines/llama31_8b/dover
+  resume: true
+  on_sample_error: continue
+  sample_workers: 2
+  replay_backend:
+    type: native
+    options:
+      host_api: *id001
+      paired_control: true
+      control_output_root: outputs/baselines/shared-controls/rq1_llama31_8b_full
+      continuation_char_budget: 12000
+      timeout_seconds: 7500
+      swebench_cache_dir: outputs/baselines/repository-cache
+      project_environments:
+        openmanus: .venv-openmanus
+        metagpt: .venv-metagpt
+        ag2: .venv-ag2
+        magentic-one: .venv-magentic-one
+      native_options:
+        max_steps: 20
+        max_turns: 6
+        max_stalls: 3
+        native_timeout_seconds: 1800
+        context_window_tokens: 32768
+        model_vision: false
+        code_execution_environment: per-sample
+        context_budget_mode: server-tokenizer
+        swebench_workspace_mode: isolated-clone
+      evaluation:
+        timeout_seconds: 1800
+        process_timeout_seconds: 5400
+        max_workers: 1
+        cache_level: env
+        clean: false
+        namespace: swebench
+        docker_platform: linux/amd64
+        use_host_docker_credentials: false
+  model_identity: llama31-8b
+- name: rq1-runtime-no_intervention-llama31-8b-full
+  method: no_intervention
+  input_path: ../../data/evaluation/rq1_complete_test.jsonl
+  input_format: aria-full
+  split: test
+  max_events: 100000
+  prompt_char_budget: 24000
+  output_dir: ../../outputs/baselines/llama31_8b/no_intervention
+  resume: true
+  on_sample_error: continue
+  sample_workers: 2
+  replay_backend:
+    type: native
+    options:
+      host_api: *id001
+      paired_control: true
+      control_output_root: outputs/baselines/shared-controls/rq1_llama31_8b_full
+      continuation_char_budget: 12000
+      timeout_seconds: 7500
+      swebench_cache_dir: outputs/baselines/repository-cache
+      project_environments:
+        openmanus: .venv-openmanus
+        metagpt: .venv-metagpt
+        ag2: .venv-ag2
+        magentic-one: .venv-magentic-one
+      native_options:
+        max_steps: 20
+        max_turns: 6
+        max_stalls: 3
+        native_timeout_seconds: 1800
+        context_window_tokens: 32768
+        model_vision: false
+        code_execution_environment: per-sample
+        context_budget_mode: server-tokenizer
+        swebench_workspace_mode: isolated-clone
+      evaluation:
+        timeout_seconds: 1800
+        process_timeout_seconds: 5400
+        max_workers: 1
+        cache_level: env
+        clean: false
+        namespace: swebench
+        docker_platform: linux/amd64
+        use_host_docker_credentials: false
+  model_identity: llama31-8b
+- name: rq1-runtime-spark_to_fire-llama31-8b-full
+  method: spark_to_fire
+  input_path: ../../data/evaluation/rq1_complete_test.jsonl
+  input_format: aria-full
+  split: test
+  max_events: 100000
+  prompt_char_budget: 24000
+  output_dir: ../../outputs/baselines/llama31_8b/spark_to_fire
+  resume: true
+  on_sample_error: continue
+  sample_workers: 2
+  replay_backend:
+    type: native
+    options:
+      host_api: *id001
+      paired_control: true
+      control_output_root: outputs/baselines/shared-controls/rq1_llama31_8b_full
+      continuation_char_budget: 12000
+      timeout_seconds: 7500
+      swebench_cache_dir: outputs/baselines/repository-cache
+      project_environments:
+        openmanus: .venv-openmanus
+        metagpt: .venv-metagpt
+        ag2: .venv-ag2
+        magentic-one: .venv-magentic-one
+      native_options:
+        max_steps: 20
+        max_turns: 6
+        max_stalls: 3
+        native_timeout_seconds: 1800
+        context_window_tokens: 32768
+        model_vision: false
+        code_execution_environment: per-sample
+        context_budget_mode: server-tokenizer
+        swebench_workspace_mode: isolated-clone
+      evaluation:
+        timeout_seconds: 1800
+        process_timeout_seconds: 5400
+        max_workers: 1
+        cache_level: env
+        clean: false
+        namespace: swebench
+        docker_platform: linux/amd64
+        use_host_docker_credentials: false
+  model_identity: llama31-8b
+- name: rq1-runtime-safeagent-llama31-8b-full
+  method: safeagent
+  input_path: ../../data/evaluation/rq1_complete_test.jsonl
+  input_format: aria-full
+  split: test
+  max_events: 100000
+  prompt_char_budget: 24000
+  output_dir: ../../outputs/baselines/llama31_8b/safeagent
+  resume: true
+  on_sample_error: continue
+  sample_workers: 2
+  replay_backend:
+    type: native
+    options:
+      host_api: *id001
+      paired_control: true
+      control_output_root: outputs/baselines/shared-controls/rq1_llama31_8b_full
+      continuation_char_budget: 12000
+      timeout_seconds: 7500
+      swebench_cache_dir: outputs/baselines/repository-cache
+      project_environments:
+        openmanus: .venv-openmanus
+        metagpt: .venv-metagpt
+        ag2: .venv-ag2
+        magentic-one: .venv-magentic-one
+      native_options:
+        max_steps: 20
+        max_turns: 6
+        max_stalls: 3
+        native_timeout_seconds: 1800
+        context_window_tokens: 32768
+        model_vision: false
+        code_execution_environment: per-sample
+        context_budget_mode: server-tokenizer
+        swebench_workspace_mode: isolated-clone
+      evaluation:
+        timeout_seconds: 1800
+        process_timeout_seconds: 5400
+        max_workers: 1
+        cache_level: env
+        clean: false
+        namespace: swebench
+        docker_platform: linux/amd64
+        use_host_docker_credentials: false
+  model_identity: llama31-8b

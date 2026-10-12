@@ -1,0 +1,12 @@
+family: qwen
+foundation_model: Qwen/Qwen2.5-7B-Instruct
+seed: 42
+lora_rank: 32
+output_root: outputs/training/qwen
+stages:
+- sft
+- dpo
+- transfer_diagnosis
+- grpo_repair
+- grpo_gate
+expected_grpo_updates: 16

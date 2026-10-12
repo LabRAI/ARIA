@@ -1,0 +1,18 @@
+source_manifest: outputs/evaluation/rq1/manifest.json
+workers: 12
+workers_per_variant: 6
+swe_workers: 1
+report_seconds: 90
+poll_seconds: 5
+minimum_disk_free_gib: 35
+bootstrap_draws: 1000
+bootstrap_seed: 20260915
+adapter_load_timeout_seconds: 300
+service:
+  model: Qwen/Qwen2.5-7B-Instruct
+  port: 19111
+  gpu: 3
+  memory_gib: 23
+  context: 16384
+  max_num_seqs: 16
+output_root: outputs/evaluation/rq3

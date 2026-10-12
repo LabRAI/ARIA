@@ -1,0 +1,49 @@
+job: inference
+runtime:
+  kind: endpoint
+data_dir: data
+external_dir: external
+output_dir: outputs
+workspace_dir: workspace/manual_vllm/openmanus/mmlu/vllm-qwen3-8b-nonthinking
+output:
+  existing_output_policy: resume
+aria:
+  enabled: false
+  mode: 'off'
+api:
+  runtime_id: runtime/vllm-qwen3-8b-nonthinking
+  model_id: model/qwen3-8b-04-28
+  provider: vllm
+  protocol: openai-chat-completions
+  base_url: http://127.0.0.1:18100/v1
+  model: qwen3-8b
+  api_key_required: false
+  timeout_seconds: 600
+  max_tokens: 2048
+  context_window_tokens: 32768
+  temperature: 0.0
+  retries: 4
+  retry_seconds: 10
+logging:
+  level: INFO
+prepare:
+  clone_mas: false
+  download_benchmarks: false
+  gaia_attachments: false
+experiments:
+- name: manual-vllm-openmanus-mmlu-qwen3-8b-nonthinking-full
+  mas: openmanus
+  benchmark: mmlu
+  native: true
+  batch: true
+  sample_source: full
+  sample_split: test
+  sample_offset: 0
+  sample_limit: null
+  resume: true
+  resume_require_resolved_evaluation: true
+  progress: true
+  judge: false
+  max_steps: 1
+  native_timeout_seconds: 3000
+repair_datasets: []

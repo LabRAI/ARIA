@@ -1,0 +1,100 @@
+job: aria-training
+runtime:
+  kind: training
+data_dir: data
+external_dir: external
+output_dir: outputs/training/qwen/dpo/artifacts
+workspace_dir: workspace/training/qwen/dpo
+output:
+  existing_output_policy: resume
+aria:
+  enabled: false
+  mode: 'off'
+  post_training:
+    base_model: ../../../outputs/training/qwen/sft/checkpoints/sft/checkpoint
+    source_path: ../../../data/training/full
+    gate_validation_path: ../../../data/training/gate_validation.jsonl
+    output_dir: ../../../outputs/training/qwen/dpo
+    repair_conditioning: cascade
+    stages:
+    - dpo
+    feedback_dropout_probability: 1.0
+    random_seed: 42
+    resume: true
+    backend:
+      type: command
+      command:
+      - env
+      - CUDA_VISIBLE_DEVICES=0
+      - UV_PROJECT_ENVIRONMENT=.venv-aria-training
+      - UV_NO_SYNC=1
+      - bash
+      - scripts/aria/launch_transformers.sh
+      - --stage
+      - '{stage}'
+      - --base-model
+      - '{base_model}'
+      - --datasets-json
+      - '{datasets}'
+      - --output-dir
+      - '{output_dir}'
+      - --reference-model
+      - outputs/training/qwen/sft/checkpoints/sft/checkpoint
+      - --environment-spec
+      - '{environment_spec}'
+      - --epochs
+      - '1'
+      - --max-length
+      - '12288'
+      - --max-prompt-tokens
+      - '8192'
+      - --lora-rank
+      - '32'
+      - --gradient-accumulation-steps
+      - '8'
+      - --gradient-checkpointing
+      - 'true'
+      - --dtype
+      - bfloat16
+      - --attention-implementation
+      - sdpa
+      - --diagnosis-token-weight
+      - '1'
+      - --row-weighting
+      - balanced_cell_task
+      - --max-row-weight-ratio
+      - '4'
+      - --min-event-content-chars
+      - '160'
+      - --require-visible-evidence
+      - 'true'
+      - --skip-oversized-targets
+      - 'false'
+      - --standalone-checkpoint
+      - 'false'
+      - --device
+      - cuda
+      - --optimizer-steps
+      - '192'
+      - --learning-rate
+      - 2e-06
+      - --dpo-beta
+      - '0.1'
+      - --dpo-sft-anchor
+      - '0.05'
+      - --dpo-label-smoothing
+      - '0.05'
+      - --seed
+      - '42'
+      - --cuda-memory-fraction
+      - '0.5052631578947369'
+    evaluation_holdout_paths:
+    - ../../../data/ARIA-Full-Processed/val
+    - ../../../data/ARIA-Full-Processed/test
+logging:
+  level: INFO
+prepare:
+  clone_mas: false
+  download_benchmarks: false
+experiments: []
+repair_datasets: []

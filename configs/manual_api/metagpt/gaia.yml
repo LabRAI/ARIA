@@ -1,0 +1,51 @@
+job: inference
+runtime:
+  kind: endpoint
+data_dir: data
+external_dir: external
+output_dir: outputs
+workspace_dir: workspace/inference_selected/metagpt/gaia/endpoint-b-claude-sonnet-4-6
+output:
+  existing_output_policy: resume
+aria:
+  enabled: false
+  mode: 'off'
+api:
+  runtime_id: runtime/endpoint-b-claude-sonnet-4-6
+  model_id: model/claude-sonnet-4-6
+  provider: claude-gateway
+  protocol: anthropic-messages
+  base_url: https://api.example.invalid
+  model: claude-sonnet-4-6
+  api_key_env: ANTHROPIC_API_KEY
+  max_tokens: 8192
+  temperature: 0.0
+  api_key_required: true
+  timeout_seconds: 600
+  retries: 4
+  retry_seconds: 10
+logging:
+  level: INFO
+prepare:
+  clone_mas: false
+  download_benchmarks: false
+  gaia_attachments: true
+experiments:
+- name: selected-metagpt-gaia-endpoint-b-claude-sonnet-4-6
+  mas: metagpt
+  benchmark: gaia
+  native: true
+  batch: true
+  sample_source: full
+  sample_split: validation
+  sample_offset: 0
+  sample_limit: null
+  resume: true
+  resume_require_resolved_evaluation: true
+  progress: true
+  judge: false
+  max_turns: 4
+  native_timeout_seconds: 3000
+  evaluation:
+    harness: gaia-official
+repair_datasets: []

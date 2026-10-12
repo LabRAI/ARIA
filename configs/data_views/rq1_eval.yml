@@ -1,0 +1,76 @@
+pool: data/evaluation/rq1_complete_test.jsonl
+native_identity_manifest: data/evaluation/native_identities.json
+expected_pool_size: 4890
+expected_posthoc_size: 3953
+models:
+  qwen: outputs/training/qwen
+  llama: outputs/training/llama
+training_audit_paths:
+- data/training/full
+- data/training/repair.jsonl
+- data/training/gate.jsonl
+training_seed: 42
+execution_seed: 42
+gate_threshold: 0.5
+temperature: 0.2
+budgets:
+- 1
+- 2
+- 4
+predictor_input_tokens: 8192
+predictor_output_tokens: 4096
+posthoc_prompt_chars: 24000
+workers: 24
+workers_per_service: 10
+swe_workers: 2
+max_num_seqs: 24
+max_infrastructure_attempts: 2
+process_timeout_seconds: 7800
+minimum_disk_free_gib: 35
+report_seconds: 90
+poll_seconds: 3
+serving_environment: .venv-vllm
+project_environments:
+  ag2: .venv-ag2
+  openmanus: .venv-openmanus
+  metagpt: .venv-metagpt
+  magentic-one: .venv-magentic-one
+native_options:
+  max_steps: 20
+  max_turns: 6
+  max_stalls: 3
+  native_timeout_seconds: 1800
+  context_window_tokens: 32768
+  model_vision: false
+  code_execution_environment: per-sample
+  context_budget_mode: server-tokenizer
+  swebench_workspace_mode: isolated-clone
+evaluation:
+  timeout_seconds: 1800
+  process_timeout_seconds: 5400
+  max_workers: 1
+  cache_level: env
+  clean: false
+  namespace: swebench
+  docker_platform: linux/amd64
+  use_host_docker_credentials: false
+services:
+  host:
+    model: Qwen/Qwen3-8B
+    port: 19010
+    gpu: 4
+    memory_gib: 27
+    context: 32768
+  qwen:
+    model: Qwen/Qwen2.5-7B-Instruct
+    port: 19011
+    gpu: 4
+    memory_gib: 26
+    context: 16384
+  llama:
+    model: meta-llama/Llama-3.1-8B-Instruct
+    port: 19012
+    gpu: 4
+    memory_gib: 28
+    context: 16384
+output_root: outputs/evaluation/rq1

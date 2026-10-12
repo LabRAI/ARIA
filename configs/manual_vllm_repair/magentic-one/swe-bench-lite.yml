@@ -1,0 +1,68 @@
+job: repair
+runtime:
+  kind: endpoint
+data_dir: data
+external_dir: external
+output_dir: outputs
+workspace_dir: workspace/manual_vllm_repair/magentic-one/swe-bench-lite/vllm-llama-3-1-70b-instruct
+output:
+  existing_output_policy: resume
+aria:
+  enabled: false
+  mode: 'off'
+api:
+  runtime_id: runtime/vllm-llama-3-1-70b-instruct
+  model_id: model/llama-3-1-70b-instruct
+  provider: vllm
+  protocol: openai-chat-completions
+  base_url: http://127.0.0.1:18000/v1
+  model: llama-3.1-70b-instruct
+  api_key_required: false
+  timeout_seconds: 600
+  max_tokens: 4096
+  context_window_tokens: 32768
+  temperature: 0.0
+  retries: 4
+  retry_seconds: 10
+logging:
+  level: INFO
+prepare:
+  clone_mas: false
+  download_benchmarks: false
+  gaia_attachments: false
+experiments: []
+repair_datasets:
+- name: repair-v4-manual-vllm-magentic-one-swe-bench-lite-llama31-70b-full
+  schema_version: aria-repair-dataset-v6
+  source_batch_dir: outputs/inference/magentic-one/swe-bench-lite/manual-vllm-magentic-one-swe-bench-lite-llama31-70b-full
+  dataset_dir: outputs/repair/magentic-one/swe-bench-lite/repair-v4-manual-vllm-magentic-one-swe-bench-lite-llama31-70b-full/dataset
+  repair_output_dir: outputs/repair/magentic-one/swe-bench-lite/repair-v4-manual-vllm-magentic-one-swe-bench-lite-llama31-70b-full/reruns
+  split: train
+  sample_split: test
+  rerun: true
+  native: true
+  resume: true
+  on_sample_error: continue
+  retry_invalid: false
+  max_consecutive_endpoint_invalid: 3
+  repair_trials: 1
+  structured_output_retries: 2
+  attribution_max_events: 64
+  gate_success_sample_rate: 0.25
+  require_inference_completed: false
+  require_trace_acceptance: true
+  repair_operator_id: model/aria-repair-v4-localize-attribute-patch-answer-blind
+  config_id: config/repair-v4-manual-vllm-magentic-one-swe-bench-lite-llama31-70b-full
+  max_turns: 8
+  max_stalls: 3
+  native_timeout_seconds: 3000
+  evaluation:
+    harness: swebench-official
+    timeout_seconds: 1800
+    process_timeout_seconds: 5400
+    max_workers: 1
+    cache_level: env
+    clean: false
+    namespace: swebench
+    docker_platform: linux/amd64
+    use_host_docker_credentials: false

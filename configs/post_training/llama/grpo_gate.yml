@@ -1,0 +1,185 @@
+job: aria-training
+runtime:
+  kind: training
+data_dir: data
+external_dir: external
+output_dir: outputs/training/llama/grpo_gate/artifacts
+workspace_dir: workspace/training/llama/grpo_gate
+output:
+  existing_output_policy: resume
+aria:
+  enabled: false
+  mode: 'off'
+  post_training:
+    base_model: ../../../outputs/training/llama/grpo_repair/checkpoints/grpo_repair/checkpoint
+    source_path: ../../../data/training/full
+    gate_validation_path: ../../../data/training/gate_validation.jsonl
+    output_dir: ../../../outputs/training/llama/grpo_gate
+    repair_conditioning: cascade
+    stages:
+    - grpo_gate
+    feedback_dropout_probability: 1.0
+    random_seed: 42
+    resume: false
+    backend:
+      type: command
+      command:
+      - env
+      - CUDA_VISIBLE_DEVICES=0
+      - UV_PROJECT_ENVIRONMENT=.venv-aria-training
+      - UV_NO_SYNC=1
+      - bash
+      - scripts/aria/launch_transformers.sh
+      - --stage
+      - '{stage}'
+      - --base-model
+      - '{base_model}'
+      - --datasets-json
+      - '{datasets}'
+      - --output-dir
+      - '{output_dir}'
+      - --reference-model
+      - outputs/training/llama/transfer_diagnosis/checkpoints/transfer_diagnosis/checkpoint
+      - --environment-spec
+      - '{environment_spec}'
+      - --epochs
+      - '1'
+      - --max-length
+      - '12288'
+      - --max-prompt-tokens
+      - '8192'
+      - --lora-rank
+      - '32'
+      - --gradient-accumulation-steps
+      - '8'
+      - --gradient-checkpointing
+      - 'true'
+      - --dtype
+      - bfloat16
+      - --attention-implementation
+      - sdpa
+      - --diagnosis-token-weight
+      - '1'
+      - --row-weighting
+      - balanced_cell_task
+      - --max-row-weight-ratio
+      - '4'
+      - --min-event-content-chars
+      - '160'
+      - --require-visible-evidence
+      - 'true'
+      - --skip-oversized-targets
+      - 'false'
+      - --standalone-checkpoint
+      - 'false'
+      - --device
+      - cuda
+      - --learning-rate
+      - 2e-06
+      - --grpo-incidents
+      - '192'
+      - --grpo-max-attempts
+      - '2'
+      - --grpo-gate-rollouts
+      - '4'
+      - --grpo-gate-max-probes
+      - '0'
+      - --grpo-gate-exploration
+      - '0.5'
+      - --grpo-max-new-tokens
+      - '1536'
+      - --grpo-diagnosis-max-new-tokens
+      - '256'
+      - --grpo-gate-probability-source
+      - label_likelihood
+      - --grpo-gate-policy
+      - contextual
+      - --grpo-gate-repair-chain
+      - deployment
+      - --grpo-gate-anchor-weight
+      - '0.05'
+      - --grpo-allow-no-gradient
+      - 'false'
+      - --grpo-ledger-replay
+      - 'false'
+      - --seed
+      - '42'
+      - --cuda-memory-fraction
+      - '0.8'
+      - --grpo-gate-anchor-path
+      - data/training/full/sft.jsonl
+      - --grpo-optimizer-steps
+      - '16'
+      - --grpo-budget-passes
+      - '6'
+      - --grpo-throughput-after-updates
+      - '1'
+      - --grpo-checkpoint-interval
+      - '1'
+    evaluation_holdout_paths:
+    - ../../../data/ARIA-Full-Processed/val
+    - ../../../data/ARIA-Full-Processed/test
+    environment_path: ../../../data/training/gate.jsonl
+    environment:
+      kind: native
+      options:
+        host_api:
+          provider: vllm
+          protocol: openai-chat-completions
+          base_url: http://127.0.0.1:18910/v1
+          model: aria-training-qwen-host-20260914
+          api_key_required: false
+          timeout_seconds: 180
+          max_tokens: 2048
+          temperature: 0.0
+          seed: 42
+          retries: 1
+          context_window_tokens: 32768
+        paired_control: true
+        external_dir: external
+        control_output_root: outputs/training/llama/grpo_gate/controls
+        continuation_char_budget: 12000
+        timeout_seconds: 660
+        project_environments:
+          ag2: .venv-ag2
+          metagpt: .venv-metagpt
+          magentic-one: .venv-magentic-one
+          openmanus: .venv-openmanus
+        native_options:
+          max_steps: 10
+          max_turns: 4
+          max_stalls: 3
+          native_timeout_seconds: 600
+          context_window_tokens: 32768
+          model_vision: false
+          code_execution_environment: per-sample
+          context_budget_mode: server-tokenizer
+          swebench_workspace_mode: isolated-clone
+        evaluation:
+          timeout_seconds: 1800
+          process_timeout_seconds: 5400
+          max_workers: 1
+          cache_level: env
+          clean: false
+          namespace: swebench
+          docker_platform: linux/amd64
+          use_host_docker_credentials: false
+logging:
+  level: INFO
+prepare:
+  clone_mas: false
+  download_benchmarks: false
+experiments: []
+repair_datasets: []
+api:
+  provider: vllm
+  protocol: openai-chat-completions
+  base_url: http://127.0.0.1:18910/v1
+  model: aria-training-qwen-host-20260914
+  api_key_required: false
+  timeout_seconds: 180
+  max_tokens: 2048
+  temperature: 0.0
+  seed: 42
+  retries: 1
+  context_window_tokens: 32768

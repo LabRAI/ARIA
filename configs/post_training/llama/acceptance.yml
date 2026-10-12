@@ -1,0 +1,12 @@
+family: llama
+foundation_model: meta-llama/Llama-3.1-8B-Instruct
+seed: 42
+lora_rank: 32
+output_root: outputs/training/llama
+stages:
+- sft
+- dpo
+- transfer_diagnosis
+- grpo_repair
+- grpo_gate
+expected_grpo_updates: 16

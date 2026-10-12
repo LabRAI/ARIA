@@ -1,0 +1,37 @@
+output_root: outputs/training/rq2
+rq1_source: data/training/full
+validation: data/ARIA-Full-Processed/val
+test: data/ARIA-Full-Processed/test
+training_fraction: 0.1
+update_fraction: 0.1
+data_seed: 42
+seeds:
+- 42
+training_gpu: '0'
+training_environment: .venv-aria-training
+unseen_benchmarks:
+- bbh
+- arc-challenge
+unseen_systems:
+- langgraph
+models:
+  qwen25-1.5b: Qwen/Qwen2.5-1.5B-Instruct
+  qwen25-3b: Qwen/Qwen2.5-3B-Instruct
+  qwen25-7b: Qwen/Qwen2.5-7B-Instruct
+  qwen25-14b: Qwen/Qwen2.5-14B-Instruct
+  llama31-8b: meta-llama/Llama-3.1-8B-Instruct
+environments:
+  grpo_repair: data/training/repair.jsonl
+  grpo_gate: data/training/gate.jsonl
+templates:
+  sft: configs/post_training/qwen/sft.yml
+  dpo: configs/post_training/qwen/dpo.yml
+  transfer_diagnosis: configs/post_training/qwen/transfer_diagnosis.yml
+  grpo_repair: configs/post_training/qwen/grpo_repair.yml
+  grpo_gate: configs/post_training/qwen/grpo_gate.yml
+pool_template: configs/generalization/rq2_new_pool.yml
+stage_overrides:
+  qwen25-14b:
+    grpo_gate:
+      grpo-incidents: 285
+      cuda-memory-fraction: 0.85

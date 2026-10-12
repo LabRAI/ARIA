@@ -1,0 +1,88 @@
+job: aria-training
+runtime:
+  kind: training
+data_dir: data
+external_dir: external
+output_dir: outputs/training/llama/sft/artifacts
+workspace_dir: workspace/training/llama/sft
+output:
+  existing_output_policy: resume
+aria:
+  enabled: false
+  mode: 'off'
+  post_training:
+    base_model: meta-llama/Llama-3.1-8B-Instruct
+    source_path: ../../../data/training/full
+    gate_validation_path: ../../../data/training/gate_validation.jsonl
+    output_dir: ../../../outputs/training/llama/sft
+    repair_conditioning: cascade
+    stages:
+    - sft
+    feedback_dropout_probability: 1.0
+    random_seed: 42
+    resume: true
+    backend:
+      type: command
+      command:
+      - env
+      - CUDA_VISIBLE_DEVICES=0
+      - UV_PROJECT_ENVIRONMENT=.venv-aria-training
+      - UV_NO_SYNC=1
+      - bash
+      - scripts/aria/launch_transformers.sh
+      - --stage
+      - '{stage}'
+      - --base-model
+      - '{base_model}'
+      - --datasets-json
+      - '{datasets}'
+      - --output-dir
+      - '{output_dir}'
+      - --reference-model
+      - '{reference_model}'
+      - --environment-spec
+      - '{environment_spec}'
+      - --epochs
+      - '1'
+      - --learning-rate
+      - '0.00002'
+      - --max-length
+      - '12288'
+      - --max-prompt-tokens
+      - '8192'
+      - --lora-rank
+      - '32'
+      - --gradient-accumulation-steps
+      - '8'
+      - --gradient-checkpointing
+      - 'true'
+      - --dtype
+      - bfloat16
+      - --attention-implementation
+      - sdpa
+      - --diagnosis-token-weight
+      - '1'
+      - --row-weighting
+      - balanced_cell_task
+      - --max-row-weight-ratio
+      - '4'
+      - --min-event-content-chars
+      - '160'
+      - --require-visible-evidence
+      - 'true'
+      - --skip-oversized-targets
+      - 'false'
+      - --standalone-checkpoint
+      - 'false'
+      - --seed
+      - '42'
+    evaluation_holdout_paths:
+    - ../../../data/ARIA-Full-Processed/val
+    - ../../../data/ARIA-Full-Processed/test
+logging:
+  level: INFO
+prepare:
+  clone_mas: false
+  download_benchmarks: false
+experiments: []
+repair_datasets: []

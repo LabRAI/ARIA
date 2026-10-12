@@ -1,0 +1,1 @@
+"""Magentic-One native implementation."""

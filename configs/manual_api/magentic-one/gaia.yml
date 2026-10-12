@@ -1,0 +1,52 @@
+job: inference
+runtime:
+  kind: endpoint
+data_dir: data
+external_dir: external
+output_dir: outputs
+workspace_dir: workspace/inference_selected/magentic-one/gaia/endpoint-a-gpt-5-5-xhigh
+output:
+  existing_output_policy: resume
+aria:
+  enabled: false
+  mode: 'off'
+api:
+  runtime_id: runtime/endpoint-a-gpt-5-5-xhigh
+  model_id: model/gpt-5-5
+  provider: openai-compatible
+  protocol: openai-chat-completions
+  base_url: https://api.example.invalid
+  model: gpt-5.5
+  api_key_env: OPENAI_API_KEY
+  max_tokens: 8192
+  reasoning_effort: xhigh
+  api_key_required: true
+  timeout_seconds: 600
+  retries: 4
+  retry_seconds: 10
+logging:
+  level: INFO
+prepare:
+  clone_mas: false
+  download_benchmarks: false
+  gaia_attachments: true
+experiments:
+- name: selected-magentic-one-gaia-endpoint-a-gpt-5-5-xhigh
+  mas: magentic-one
+  benchmark: gaia
+  native: true
+  batch: true
+  sample_source: full
+  sample_split: validation
+  sample_offset: 0
+  sample_limit: null
+  resume: true
+  resume_require_resolved_evaluation: true
+  progress: true
+  judge: false
+  max_turns: 12
+  max_stalls: 3
+  native_timeout_seconds: 3000
+  evaluation:
+    harness: gaia-official
+repair_datasets: []

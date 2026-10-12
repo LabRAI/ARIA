@@ -1,0 +1,203 @@
+[project]
+name = "masfm"
+version = "0.1.0"
+description = "ARIA: A Runtime Inspection and Patching Framework for Multi-Agent Systems"
+requires-python = ">=3.11"
+dependencies = [
+    "antlr4-python3-runtime==4.11.*",
+    "huggingface-hub>=0.34,<1",
+    "httpx[socks]>=0.28.1",
+    "jinja2>=3.1,<4",
+    "matplotlib>=3.9,<4",
+    "openpyxl>=3.1.5,<4",
+    "partial-json-parser>=0.2.1.1.post7,<0.3",
+    "pyarrow>=24.0.0",
+    "python-dotenv>=1.1.1",
+    "pyyaml>=6.0.2",
+    "socksio>=1.0.0",
+    "swebench==4.1.0",
+    "sympy>=1.13,<2",
+    "tenacity~=9.0.0",
+    "tqdm>=4.67.1",
+]
+
+[project.optional-dependencies]
+langgraph = ["langgraph==0.6.7"]
+
+aria-training = [
+    "peft>=0.17,<1",
+    "torch>=2.8,<3",
+    "transformers>=4.57.6,<5",
+]
+
+ag2 = [
+    "ag2[openai]==0.13.2",
+]
+
+magentic-one = [
+    "autogen-agentchat==0.7.5",
+    "autogen-ext[docker,magentic-one,openai]==0.7.5",
+    "pypdf>=6,<7",
+]
+
+metagpt = [
+    "aiofiles>=23.2.1,<25",
+    "aiohttp>=3.8.6,<4",
+    "anthropic>=0.47.2,<1",
+    "anytree>=2.12,<3",
+    "beautifulsoup4>=4.12.3,<5",
+    "boto3>=1.34.69,<2",
+    "channels>=4,<5",
+    "curl-cffi>=0.7,<1",
+    "faiss-cpu>=1.7.4,<2",
+    "fire>=0.4,<1",
+    "fsspec",
+    "gitignore-parser>=0.1.9,<1",
+    "gitpython>=3.1.40,<4",
+    "grep-ast>=0.3.3,<1",
+    "grpcio>=1.67,<2",
+    "grpcio-status>=1.62.3,<2",
+    "grpcio-tools>=1.62.3,<2",
+    "gymnasium>=0.29.1,<2",
+    "htmlmin>=0.1.12,<1",
+    "httplib2>=0.22,<1",
+    "httpx>=0.28.1,<1",
+    "imap-tools>=1.5,<2",
+    "ipykernel>=6.27.1,<8",
+    "ipython>=8.17.2,<10",
+    "ipywidgets>=8.1.1,<9",
+    "jieba>=0.42.1,<1",
+    "lancedb>=0.4,<1",
+    "libcst>=1,<2",
+    "loguru>=0.6,<1",
+    "meilisearch>=0.21,<1",
+    "nbclient>=0.9,<1",
+    "nbformat>=5.9.2,<6",
+    "networkx>=3.2.1,<4",
+    "numpy>=1.26.4,<3",
+    "openai>=1.64,<2",
+    "openpyxl>=3.1.5,<4",
+    "pandas>=2.1.1,<3",
+    "pillow>=10,<12",
+    "playwright>=1.26,<2",
+    "pydantic>=2.5.3,<3",
+    "pygithub>=2.3,<3",
+    "pylint>=3.0.3,<4",
+    "pyyaml>=6.0.1,<7",
+    "python-docx>=0.8.11,<2",
+    "qdrant-client>=1.7,<2",
+    "rank-bm25>=0.2.2,<1",
+    "redis>=5,<6",
+    "rich>=13.6,<16",
+    "scikit-learn>=1.3.2,<2",
+    "setuptools>=65.6.3,<80",
+    "socksio>=1.0.0,<2",
+    "ta>=0.10.2,<1",
+    "tiktoken>=0.7,<1",
+    "tenacity>=8.2.3,<10",
+    "tqdm>=4.66.2,<5",
+    "tree-sitter>=0.23.2,<0.24",
+    "tree-sitter-languages>=1.10.2,<2",
+    "tree-sitter-python>=0.23.2,<0.24",
+    "typer>=0.9,<1",
+    "typing-extensions>=4.11,<5",
+    "typing-inspect>=0.8,<1",
+    "unidiff>=0.7.5,<1",
+    "websocket-client>=1.8,<2",
+    "websockets>=10,<12",
+    "wrapt>=1.15,<2",
+]
+
+openmanus = [
+    "pydantic>=2.13.4,<3",
+    "openai>=1.99.1,<2",
+    "tenacity~=9.0.0",
+    "pyyaml~=6.0.2",
+    "loguru~=0.7.3",
+    "numpy",
+    "datasets~=3.4.1",
+    "fastapi~=0.115.11",
+    "tiktoken~=0.9.0",
+    "html2text~=2024.2.26",
+    "gymnasium~=1.1.1",
+    "pillow<11",
+    "browsergym~=0.13.3",
+    "uvicorn~=0.34.0",
+    "unidiff~=0.7.5",
+    "browser-use~=0.1.40",
+    "googlesearch-python~=1.3.0",
+    "baidusearch~=1.0.3",
+    "duckduckgo_search~=7.5.3",
+    "aiofiles~=24.1.0",
+    "colorama~=0.4.6",
+    "aiohttp~=3.14.1",
+    "daytona~=0.21.8",
+    "structlog~=25.4.0",
+    "playwright~=1.51.0",
+    "docker~=7.1.0",
+    "mcp~=1.5.0",
+    "httpx>=0.27.0",
+    "tomli>=2.0.0",
+    "boto3>=1.37.0,<1.37.4",
+    "markdownify~=0.14.1",
+    "pandas~=2.3.3",
+    "requests>=2.34.2,<3",
+    "urllib3>=2.7.0,<3",
+    "chardet>=7.4.3,<8",
+    "charset-normalizer>=3.4.7,<4",
+    "beautifulsoup4~=4.13.3",
+    "crawl4ai~=0.6.3",
+    "huggingface-hub>=0.34,<1",
+    "transformers>=4.57.6,<5",
+    "tokenizers>=0.22.2,<0.23",
+    "setuptools>=77.0.3,<80",
+]
+
+vllm = [
+    "fastapi<0.137; sys_platform == 'linux'",
+    "setuptools>=77.0.3,<80",
+    "torch==2.8.0; sys_platform == 'linux'",
+    "vllm>=0.10.2,<0.11.1; sys_platform == 'linux'",
+]
+
+[tool.uv]
+conflicts = [
+    [
+        { extra = "ag2" },
+        { extra = "magentic-one" },
+    ],
+    [
+        { extra = "ag2" },
+        { extra = "metagpt" },
+    ],
+    [
+        { extra = "ag2" },
+        { extra = "openmanus" },
+    ],
+    [
+        { extra = "magentic-one" },
+        { extra = "openmanus" },
+    ],
+]
+
+[dependency-groups]
+dev = [
+    "pydantic>=2,<3",
+    "pytest~=8.3.5",
+    "pytest-asyncio~=0.25.3",
+]
+
+[project.scripts]
+masfm = "masfm.main:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+asyncio_default_fixture_loop_scope = "function"
+
+[build-system]
+requires = ["uv_build>=0.11.14,<0.12.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = ["aria", "common", "inference", "masfm", "repair"]
