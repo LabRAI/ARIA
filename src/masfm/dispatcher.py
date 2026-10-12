@@ -15,9 +15,6 @@ from repair.runner import run_repair
 
 
 def run_from_config(config: ExperimentConfig) -> list[dict[str, Any]]:
-    if config.job_type == "aria-generalization":
-        from masfm.generalization import run_generalization
-        return run_generalization(config)
     if config.job_type == "baselines":
         client = ModelApiClient(config.api) if config.api is not None else None
         return run_baselines(config, client)

@@ -15,8 +15,6 @@ class BenchmarkRegistration:
 
 
 BENCHMARK_REGISTRY = {
-    "bbh": BenchmarkRegistration("bbh", "text", "bbh", "ood"),
-    "arc-challenge": BenchmarkRegistration("arc-challenge", "text", "arc_challenge", "ood"),
     "gsm-plus": BenchmarkRegistration("gsm-plus", "text", "gsm_plus", "gsm_plus"),
     "mmlu": BenchmarkRegistration("mmlu", "text", "mmlu", "mmlu"),
     "humaneval": BenchmarkRegistration("humaneval", "text", "humaneval", "humaneval"),
@@ -27,8 +25,6 @@ BENCHMARK_REGISTRY = {
     "swe-bench-lite": BenchmarkRegistration(
         "swe-bench-lite", "agent", "swe_bench_lite", "swe_bench_lite"
     ),
-    # Kept for existing paper-reproduction configs.
-    "programdev": BenchmarkRegistration("programdev", "agent", "programdev", "programdev"),
 }
 
 

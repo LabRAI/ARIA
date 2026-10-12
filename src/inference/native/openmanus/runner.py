@@ -472,12 +472,6 @@ def _build_next_step_prompt(task_kind: str, workspace_path: Path) -> str:
             "Solve the problem directly. Do not call tools. Respond with exactly one final line "
             "formatted as `FINAL_ANSWER: <answer>`."
         )
-    if task_kind == "programdev":
-        return (
-            f"Build the requested program inside {workspace_path}. Create the needed files with "
-            "absolute paths, run at least one verification command or Python syntax check, summarize "
-            "what was created, and then call the terminate tool with status success."
-        )
     if task_kind == "humaneval":
         return (
             f"Complete the Python function in {workspace_path}/solution.py, run the provided check "
@@ -515,7 +509,7 @@ def _configure_agent_tools(agent: Any, task_kind: str, workspace_path: Path | No
         agent.available_tools = ToolCollection()
         agent.tool_choices = ToolChoice.NONE
         agent.special_tool_names = []
-    elif task_kind in {"programdev", "humaneval"}:
+    elif task_kind == "humaneval":
         if workspace_path is None:
             raise ValueError(f"{task_kind} tools require a workspace path")
         agent.available_tools = ToolCollection(
@@ -712,14 +706,6 @@ def _build_benchmark_prompt(
             f"Problem:\n{prompt}\n\n"
             "Required final format: FINAL_ANSWER: <numeric or symbolic answer>\n"
             "Simplify the answer as much as possible."
-        )
-    if task_kind == "programdev":
-        return (
-            "Benchmark: ProgramDev\n"
-            f"Workspace: {workspace_path}\n\n"
-            f"Task:\n{prompt}\n\n"
-            "Create a runnable implementation in the workspace. Use absolute paths for file tools. "
-            "Run a verification or syntax check before termination."
         )
     if task_kind == "humaneval":
         return (

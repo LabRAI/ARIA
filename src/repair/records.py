@@ -517,9 +517,9 @@ def answer_format_for_benchmark(benchmark_id: str) -> str:
         return "choice_letter"
     if benchmark_id == "olympiadbench":
         return "number_or_expression"
-    if benchmark_id in {"humaneval", "programdev", "programdev-v2"}:
+    if benchmark_id == "humaneval":
         return "artifact"
-    if benchmark_id in {"gaia", "swe-bench-lite", "appworld-test-c"}:
+    if benchmark_id in {"gaia", "swe-bench-lite"}:
         return "text"
     return "text"
 

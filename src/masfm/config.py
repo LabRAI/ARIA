@@ -43,7 +43,6 @@ StrictSafeLoader.add_constructor(
 )
 
 TOP_LEVEL_KEYS = {
-    "generalization",
     "job",
     "runtime",
     "data_dir",
@@ -95,7 +94,6 @@ EVALUATION_KEYS = {
 }
 EXPERIMENT_KEYS = {
     "command_rejection_policy",
-    "generalization_axis",
     "context_budget_mode",
     "swebench_workspace_mode",
     "replicate_id",
@@ -317,14 +315,6 @@ def load_config(path: Path) -> ExperimentConfig:
     if job_type != "aria-training" and runtime_kind == "training":
         raise ValueError("runtime.kind: training is only valid for job: aria-training")
     validate_job_contents(job_type, experiments, repair_datasets, baselines, aria)
-    generalization = mapping_section(raw, "generalization")
-    if job_type == "aria-generalization":
-        from masfm.generalization import validate_spec
-        validate_spec(generalization)
-        if not experiments or repair_datasets or baselines or not aria.enabled or aria.model is None or aria.mode != "active" or aria.runtime_policy != "aria":
-            raise ValueError("aria-generalization requires experiments and an active ARIA model")
-    elif generalization or any("generalization_axis" in e for e in experiments):
-        raise ValueError("generalization settings require job: aria-generalization")
     return ExperimentConfig(
         data_dir=Path(raw.get("data_dir", "data")),
         external_dir=Path(raw.get("external_dir", "external")),
@@ -342,7 +332,6 @@ def load_config(path: Path) -> ExperimentConfig:
         config_path=path,
         job_type=job_type,
         runtime_kind=runtime_kind,
-        generalization=generalization,
     )
 
 
@@ -711,7 +700,6 @@ def resolve_job_type(raw: dict[str, Any]) -> str:
         "repair",
         "aria",
         "aria-training",
-        "aria-generalization",
         "aria-passive",
         "mixed",
         "baselines",
@@ -924,7 +912,7 @@ def validate_job_contents(
             )
     elif aria.passive is not None:
         raise ValueError("aria.passive is only valid for job: aria-passive")
-    if job_type not in {"aria", "aria-training", "aria-passive", "aria-generalization"} and aria.enabled:
+    if job_type not in {"aria", "aria-training", "aria-passive"} and aria.enabled:
         raise ValueError("aria.enabled is only valid for job: aria")
 
 

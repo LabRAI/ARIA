@@ -530,38 +530,6 @@ def olympiadbench_precision(value: Any) -> float | list[float]:
     return float(text)
 
 
-def evaluate_programdev(
-    sample: dict[str, Any],
-    result: dict[str, Any],
-    run_root: Path,
-    *,
-    judge_client: Any | None,
-    judge_enabled: bool,
-) -> dict[str, Any]:
-    workspace = Path(str(result.get("workspace_path") or run_root / "workspace"))
-    static = inspect_programdev_workspace(workspace)
-    artifacts = native_artifact_paths(result, run_root)
-    payload: dict[str, Any] = {
-        "benchmark": "programdev",
-        "method": "workspace_static_checks",
-        "static_checks": static,
-        "trajectory_path": artifacts["trace"],
-        "messages_path": artifacts["messages"],
-        "workspace_path": str(workspace),
-    }
-    if judge_enabled and judge_client is not None:
-        judge = judge_programdev(sample, result, run_root, workspace, static, judge_client)
-        payload["method"] = "gpt_judge_with_static_checks"
-        payload["judge"] = judge
-        payload["score"] = 1.0 if judge.get("correct") else 0.0
-        payload["correct"] = bool(judge.get("correct"))
-    else:
-        correct = bool(static["has_python_file"] and static["syntax_ok"])
-        payload["score"] = 1.0 if correct else 0.0
-        payload["correct"] = correct
-    return payload
-
-
 def collect_output_text(result: dict[str, Any], run_root: Path) -> str:
     parts: list[str] = []
     for key in ("final_output", "final_answer"):
@@ -996,103 +964,6 @@ def build_humaneval_test_file(sample: dict[str, Any], candidate_code: str) -> st
     )
 
 
-def inspect_programdev_workspace(workspace: Path) -> dict[str, Any]:
-    files: list[dict[str, Any]] = []
-    syntax_errors: list[dict[str, str]] = []
-    if workspace.exists():
-        for path in sorted(item for item in workspace.rglob("*") if item.is_file()):
-            rel = path.relative_to(workspace)
-            files.append({"path": str(rel), "bytes": path.stat().st_size})
-            if path.suffix == ".py":
-                try:
-                    compile(path.read_text(encoding="utf-8"), str(path), "exec")
-                except Exception as exc:  # noqa: BLE001 - record verifier evidence.
-                    syntax_errors.append({"path": str(rel), "error": str(exc)})
-    py_files = [item for item in files if item["path"].endswith(".py")]
-    return {
-        "exists": workspace.exists(),
-        "file_count": len(files),
-        "python_file_count": len(py_files),
-        "has_python_file": bool(py_files),
-        "syntax_ok": not syntax_errors,
-        "syntax_errors": syntax_errors,
-        "files": files[:200],
-    }
-
-
-def judge_programdev(
-    sample: dict[str, Any],
-    result: dict[str, Any],
-    run_root: Path,
-    workspace: Path,
-    static: dict[str, Any],
-    judge_client: Any,
-) -> dict[str, Any]:
-    snippets = collect_workspace_snippets(workspace)
-    prompt = (
-        "You are evaluating a ProgramDev benchmark run. Return only JSON with keys "
-        "correct, score, reason, missing_requirements, evidence.\n\n"
-        f"Project name: {sample.get('project_name')}\n"
-        f"Task: {sample.get('task')}\n\n"
-        f"Static checks: {json.dumps(static, ensure_ascii=False)[:6000]}\n\n"
-        f"Final output:\n{str(result.get('final_output', ''))[:6000]}\n\n"
-        f"Workspace snippets:\n{snippets[:16000]}\n\n"
-        "Judge whether the produced workspace substantially satisfies the task. "
-        "Use correct=true only when there is runnable code and the main requested behavior is implemented."
-    )
-    content = judge_client.complete(
-        [
-            {"role": "system", "content": "You are a strict software benchmark judge."},
-            {"role": "user", "content": prompt},
-        ]
-    )
-    parsed = parse_json_object(content)
-    if parsed is None:
-        return {
-            "correct": False,
-            "score": 0.0,
-            "reason": "judge returned unparsable JSON",
-            "raw": content,
-        }
-    parsed.setdefault("correct", bool(parsed.get("score", 0) == 1))
-    parsed.setdefault("raw", content)
-    return parsed
-
-
-def collect_workspace_snippets(workspace: Path) -> str:
-    if not workspace.exists():
-        return "[workspace missing]"
-    parts: list[str] = []
-    for path in sorted(item for item in workspace.rglob("*") if item.is_file())[:40]:
-        rel = path.relative_to(workspace)
-        if path.stat().st_size > 20000:
-            continue
-        if path.suffix.lower() not in {".py", ".txt", ".md", ".json", ".toml", ".yml", ".yaml"}:
-            continue
-        try:
-            text = path.read_text(encoding="utf-8")
-        except UnicodeDecodeError:
-            continue
-        parts.append(f"\n--- {rel} ---\n{text[:4000]}")
-    return "\n".join(parts) or "[no text snippets]"
-
-
-def parse_json_object(text: str) -> dict[str, Any] | None:
-    try:
-        payload = json.loads(text)
-        return payload if isinstance(payload, dict) else None
-    except json.JSONDecodeError:
-        pass
-    match = re.search(r"\{.*\}", text, flags=re.DOTALL)
-    if not match:
-        return None
-    try:
-        payload = json.loads(match.group(0))
-    except json.JSONDecodeError:
-        return None
-    return payload if isinstance(payload, dict) else None
-
-
 def write_batch_summary(batch_root: Path, results: list[dict[str, Any]]) -> dict[str, Any]:
     total = len(results)
     completed = sum(1 for item in results if item.get("status") == "completed")
@@ -1176,15 +1047,11 @@ def validate_benchmark_evaluator(benchmark_slug: str) -> None:
         )
 
 
-from common.ood_benchmarks import evaluate_ood
-
 EVALUATOR_HANDLERS = {
-    "ood": _simple_evaluator(evaluate_ood),
     "gsm_plus": _simple_evaluator(evaluate_gsm_plus),
     "mmlu": _simple_evaluator(evaluate_mmlu),
     "humaneval": _simple_evaluator(evaluate_humaneval),
     "gaia": _simple_evaluator(evaluate_gaia),
     "swe_bench_lite": evaluate_swe_bench_lite,
     "olympiadbench": _simple_evaluator(evaluate_olympiadbench),
-    "programdev": evaluate_programdev,
 }

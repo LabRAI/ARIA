@@ -21,7 +21,7 @@ bash scripts/utils/install_benchmarks.sh
 UV_PROJECT_ENVIRONMENT=.venv-ag2 uv sync --locked --extra ag2
 ```
 
-Other framework extras are `openmanus`, `metagpt`, `magentic-one`, and `langgraph`.
+Other framework extras are `openmanus`, `metagpt`, and `magentic-one`.
 Keep their environments separate. Magentic-One also requires Playwright Chromium;
 GAIA requires authorized Hugging Face access through `HF_TOKEN`, and SWE-bench-Lite
 requires Docker.
@@ -73,9 +73,8 @@ uv run python -m scripts.aria.run_rq1_eval -c outputs/evaluation/rq1/launch.yml
 uv run python -m scripts.aria.report_rq1_eval -c outputs/evaluation/rq1/launch.yml
 ```
 
-RQ2 generalization and RQ3 ablations use the corresponding `rq2` and `rq3` scripts
-and configurations in `configs/data_views/`. RQ2 first prepares and trains its
-smaller training pool with `build_rq2_small`, `run_rq2_small`, and `rq2_train.yml`.
+RQ3 stage ablations use the corresponding `rq3` scripts and configurations in
+`configs/data_views/`.
 Baseline configurations are under `configs/baselines/`; their serving and
 reporting utilities are `serve_baseline_config` and `report_baselines`.
 

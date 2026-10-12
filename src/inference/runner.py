@@ -257,8 +257,6 @@ def validate_expanded_experiments(
         mas = find_mas(str(experiment["mas"]))
         benchmark_slug = str(experiment["benchmark"])
         find_benchmark(benchmark_slug)
-        if mas.slug == "langgraph" and benchmark_slug not in mas.paper_benchmarks:
-            raise ValueError(f"LangGraph Debate has no execution tools for benchmark {benchmark_slug}")
         evaluation = experiment.get("evaluation") or {}
         harness = evaluation.get("harness")
         expected_harness = {

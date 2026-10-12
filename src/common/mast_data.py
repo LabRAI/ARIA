@@ -192,32 +192,6 @@ def load_gaia_items(data_dir: Path, split: str = "validation") -> list[dict[str,
     return items
 
 
-def load_programdev_items(data_dir: Path) -> list[dict[str, Any]]:
-    path = data_dir / "benchmarks" / "programdev" / "programdev_dataset.json"
-    if not path.exists():
-        raise FileNotFoundError(f"missing ProgramDev dataset file: {path}")
-
-    payload = json.loads(path.read_text())
-    if not isinstance(payload, list):
-        raise TypeError(f"unsupported ProgramDev payload type: {type(payload).__name__}")
-
-    items: list[dict[str, Any]] = []
-    for index, record in enumerate(payload):
-        project_name = str(record.get("project_name") or f"programdev-{index:05d}")
-        description = str(record.get("description", ""))
-        items.append(
-            {
-                "sample_index": index,
-                "sample_id": f"programdev-{index:03d}-{safe_sample_slug(project_name)}",
-                "benchmark": "ProgramDev",
-                "task": description,
-                "project_name": project_name,
-                "reference_answer": None,
-            }
-        )
-    return items
-
-
 def load_mmlu_items(data_dir: Path) -> list[dict[str, Any]]:
     path = data_dir / "benchmarks" / "mmlu" / "all" / "test-00000-of-00001.parquet"
     if not path.exists():
@@ -509,13 +483,9 @@ SAMPLE_NORMALIZERS = {
     "gaia": normalize_gaia_sample,
 }
 
-from common.ood_benchmarks import load_arc_items, load_bbh_items
 
 FULL_BENCHMARK_LOADERS = {
-    "bbh": load_bbh_items,
-    "arc_challenge": load_arc_items,
     "gsm_plus": lambda data_dir, split: load_gsm_plus_items(data_dir),
-    "programdev": lambda data_dir, split: load_programdev_items(data_dir),
     "mmlu": lambda data_dir, split: load_mmlu_items(data_dir),
     "humaneval": lambda data_dir, split: load_humaneval_items(data_dir),
     "gaia": lambda data_dir, split: load_gaia_items(data_dir, split=split),

@@ -37,7 +37,6 @@ class ExperimentConfig:
     config_path: Path | None = None
     job_type: str = "inference"
     runtime_kind: str = "endpoint"
-    generalization: dict[str, Any] = field(default_factory=dict)
 
 
 def as_bool(value: Any, default: bool, *, name: str = "boolean value") -> bool:

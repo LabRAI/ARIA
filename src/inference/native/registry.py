@@ -6,7 +6,6 @@ from inference.native.magentic_one.runner import BACKEND as MAGENTIC_ONE_BACKEND
 from inference.native.metagpt.runner import BACKEND as METAGPT_BACKEND
 from inference.native.openmanus.runner import BACKEND as OPENMANUS_BACKEND
 
-from inference.native.langgraph.runner import BACKEND as LANGGRAPH_BACKEND
 
 NATIVE_MAS_BACKENDS = {
     backend.slug: backend
@@ -15,7 +14,6 @@ NATIVE_MAS_BACKENDS = {
         MAGENTIC_ONE_BACKEND,
         METAGPT_BACKEND,
         AG2_BACKEND,
-        LANGGRAPH_BACKEND,
     )
 }
 

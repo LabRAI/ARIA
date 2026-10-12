@@ -22,8 +22,6 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-langgraph = ["langgraph==0.6.7"]
-
 aria-training = [
     "peft>=0.17,<1",
     "torch>=2.8,<3",

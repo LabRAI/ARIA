@@ -6,8 +6,7 @@
 #   bash scripts/utils/install_benchmarks.sh gsm-plus mmlu
 #   bash scripts/utils/install_benchmarks.sh gaia
 #
-# Default selection is the maintained six-benchmark matrix. Other Hugging
-# Face-backed catalog benchmarks remain available as explicit arguments. GAIA
+# The supported selection is the six-benchmark matrix. GAIA
 # is gated, so requesting it fails unless HF_TOKEN or HUGGINGFACE_HUB_TOKEN is
 # available in the environment or the repository's ignored .env file.
 

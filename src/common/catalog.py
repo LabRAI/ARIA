@@ -42,24 +42,6 @@ def hf_dataset_url(repo_id: str, path: str) -> str:
 
 MAS_SPECS: tuple[MasSpec, ...] = (
     MasSpec(
-        slug="langgraph", paper_name="LangGraph Debate",
-        repo_url="https://github.com/langchain-ai/langgraph.git",
-        clone_dir="langgraph", branch=None,
-        launch_entrypoint="python -m inference.native.langgraph.launcher",
-        paper_benchmarks=("gsm-plus", "mmlu", "olympiadbench", "bbh", "arc-challenge"),
-        roles=("Solver", "Critic", "Synthesizer"),
-    ),
-    MasSpec(
-        slug="chatdev",
-        paper_name="ChatDev",
-        repo_url="https://github.com/OpenBMB/ChatDev.git",
-        clone_dir="chatdev",
-        branch="chatdev1.0",
-        launch_entrypoint="python run.py",
-        paper_benchmarks=("programdev",),
-        roles=("CEO", "CTO", "Programmer", "Code Reviewer", "Software Test Engineer"),
-    ),
-    MasSpec(
         slug="metagpt",
         paper_name="MetaGPT",
         repo_url="https://github.com/FoundationAgents/MetaGPT.git",
@@ -75,26 +57,6 @@ MAS_SPECS: tuple[MasSpec, ...] = (
             "swe-bench-lite",
         ),
         roles=("Product Manager", "Architect", "Engineer", "QA Engineer"),
-    ),
-    MasSpec(
-        slug="hyperagent",
-        paper_name="HyperAgent",
-        repo_url="https://github.com/FSoft-AI4Code/HyperAgent.git",
-        clone_dir="hyperagent",
-        branch=None,
-        launch_entrypoint="python main.py",
-        paper_benchmarks=("swe-bench-lite",),
-        roles=("Planner", "Navigator", "Editor", "Executor"),
-    ),
-    MasSpec(
-        slug="appworld",
-        paper_name="AppWorld",
-        repo_url="https://github.com/StonyBrookNLP/appworld.git",
-        clone_dir="appworld",
-        branch=None,
-        launch_entrypoint="python experiments/run.py",
-        paper_benchmarks=("appworld-test-c",),
-        roles=("Supervisor", "Service Agent", "Verifier"),
     ),
     MasSpec(
         slug="ag2",
@@ -150,48 +112,7 @@ MAS_SPECS: tuple[MasSpec, ...] = (
 )
 
 
-from common.ood_benchmarks import ARC_REVISION, BBH_REVISION, BBH_TASKS
-
 BENCHMARK_SPECS: tuple[BenchmarkSpec, ...] = (
-    BenchmarkSpec(
-        slug="bbh", paper_name="BIG-Bench Hard", mad_name=None,
-        files=tuple(RemoteFile(
-            url=f"https://raw.githubusercontent.com/suzgunmirac/BIG-Bench-Hard/{BBH_REVISION}/bbh/{task}.json",
-            path=f"{task}.json",
-        ) for task in BBH_TASKS),
-    ),
-    BenchmarkSpec(
-        slug="arc-challenge", paper_name="ARC-Challenge", mad_name=None,
-        files=(RemoteFile(
-            url=f"https://huggingface.co/datasets/allenai/ai2_arc/resolve/{ARC_REVISION}/ARC-Challenge/test-00000-of-00001.parquet",
-            path="test.parquet",
-        ),),
-    ),
-    BenchmarkSpec(
-        slug="programdev",
-        paper_name="ProgramDev",
-        mad_name="ProgramDev",
-        files=(
-            RemoteFile(
-                url=(
-                    "https://raw.githubusercontent.com/"
-                    "multi-agent-systems-failure-taxonomy/MAST/main/"
-                    "traces/programdev/programdev_dataset.json"
-                ),
-                path="programdev_dataset.json",
-            ),
-        ),
-    ),
-    BenchmarkSpec(
-        slug="programdev-v2",
-        paper_name="ProgramDev-v2",
-        mad_name=None,
-        files=(),
-        skip_reason=(
-            "The paper describes ProgramDev-v2, but the official MAST repository "
-            "does not currently expose a separate easy-download ProgramDev-v2 file."
-        ),
-    ),
     BenchmarkSpec(
         slug="swe-bench-lite",
         paper_name="SWE-Bench Lite",
@@ -200,17 +121,6 @@ BENCHMARK_SPECS: tuple[BenchmarkSpec, ...] = (
             RemoteFile(
                 url=hf_dataset_url("SWE-bench/SWE-bench_Lite", "data/test-00000-of-00001.parquet"),
                 path="data/test-00000-of-00001.parquet",
-            ),
-        ),
-    ),
-    BenchmarkSpec(
-        slug="appworld-test-c",
-        paper_name="AppWorld Test-C",
-        mad_name="Test-C",
-        files=(
-            RemoteFile(
-                url=hf_dataset_url("LukaszTP/AppWorld-Tasks", "samples.json"),
-                path="samples.json",
             ),
         ),
     ),

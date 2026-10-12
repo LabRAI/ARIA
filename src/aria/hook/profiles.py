@@ -19,10 +19,6 @@ SUBSTITUTE_ONLY_CAPABILITIES = MasHookCapabilities(
 
 
 NATIVE_MAS_HOOK_PROFILES = {
-    "langgraph": MasHookProfile(
-        slug="langgraph", pre_delivery_hook="before_graph_node",
-        post_delivery_hook="after_graph_node", capabilities=SUBSTITUTE_ONLY_CAPABILITIES,
-    ),
     "openmanus": MasHookProfile(
         slug="openmanus",
         pre_delivery_hook="before_agent_step",

@@ -264,16 +264,6 @@ class GenericPaperRoleAdapter:
 ADAPTER_REGISTRY: dict[str, HostAdapter] = {
     slug: GenericPaperRoleAdapter(profile)
     for slug, profile in {
-        "chatdev": BaselineRuntimeProfile(
-            "chatdev-sidecar",
-            "hierarchical-company",
-            "before_chatdev_phase",
-            "after_chatdev_phase",
-            "before_chatdev_delivery",
-            "on_chatdev_phase_start",
-            "chatdev-phase-log",
-            "Maps ChatDev phase-style role execution to ARIA hooks.",
-        ),
         "metagpt": BaselineRuntimeProfile(
             "metagpt-sidecar",
             "spec-to-implementation",
@@ -283,31 +273,6 @@ ADAPTER_REGISTRY: dict[str, HostAdapter] = {
             "on_metagpt_stage_start",
             "metagpt-stage-log",
             "Maps MetaGPT staged product pipeline to ARIA hooks.",
-        ),
-        "hyperagent": BaselineRuntimeProfile(
-            "hyperagent-sidecar",
-            "repository-navigation",
-            "before_hyperagent_tool_step",
-            "after_hyperagent_tool_step",
-            "before_hyperagent_resolution",
-            "on_hyperagent_handoff",
-            "hyperagent-navigation-log",
-            "Maps planner-navigator-editor repository work to ARIA hooks.",
-        ),
-        "appworld": BaselineRuntimeProfile(
-            "appworld-sidecar",
-            "app-supervision",
-            "before_appworld_service_call",
-            "after_appworld_service_call",
-            "before_appworld_verdict",
-            "on_appworld_delegate",
-            "appworld-supervisor-log",
-            "Maps supervisor-service-verifier workflows to ARIA hooks.",
-        ),
-        "langgraph": BaselineRuntimeProfile(
-            "langgraph-sidecar", "conditional-debate-graph", "before_graph_node",
-            "after_graph_node", "before_graph_final", "on_graph_start",
-            "langgraph-state-log", "Native StateGraph with pending message substitution.",
         ),
         "ag2": BaselineRuntimeProfile(
             "ag2-sidecar",

@@ -13,13 +13,10 @@
 #   FORCE=true bash scripts/utils/install_mas.sh openmanus   # re-fetch + re-checkout pin
 #   PIN=false bash scripts/utils/install_mas.sh       # clone latest, skip commit pin
 #
-# The default set is OpenManus, MetaGPT, Magentic-One, and AG2. Other catalog
-# entries can still be installed by naming them explicitly. Layout paths match
+# The supported set is OpenManus, MetaGPT, Magentic-One, and AG2.
+# Layout paths match
 # src/common/catalog.py MasSpec.clone_dir:
-#   external/mas/chatdev        (branch chatdev1.0)
 #   external/mas/metagpt
-#   external/mas/hyperagent
-#   external/mas/appworld
 #   external/mas/ag2
 #   external/mas/magentic-one   (microsoft/autogen; native bridge uses python/)
 #   external/mas/openmanus      (provides the `app` package)
@@ -34,10 +31,7 @@ PIN="${PIN:-true}"
 
 # slug|repo_url|branch_or_-|pinned_commit
 MAS_TABLE=(
-  "chatdev|https://github.com/OpenBMB/ChatDev.git|chatdev1.0|31fd994416a251ecdeb1f0a73c329271743bfb56"
   "metagpt|https://github.com/FoundationAgents/MetaGPT.git|-|11cdf466d042aece04fc6cfd13b28e1a70341b1f"
-  "hyperagent|https://github.com/FSoft-AI4Code/HyperAgent.git|-|c3092f2601ab3bf7f890fac2cd5b1290d3f59256"
-  "appworld|https://github.com/StonyBrookNLP/appworld.git|-|a072b7a86e7c1d5b1d7175659d750ebb9b79f10a"
   "ag2|https://github.com/ag2ai/ag2.git|-|8599c1860e5123bb77c094d9cf467e11b742d898"
   "magentic-one|https://github.com/microsoft/autogen.git|-|027ecf0a379bcc1d09956d46d12d44a3ad9cee14"
   "openmanus|https://github.com/FoundationAgents/OpenManus.git|-|52a13f2a57d8c7f6737eefb02ccf569594d44273"
